@@ -1,11 +1,10 @@
-import 'package:ahia/Providers/StoreProvider.dart';
-import 'package:ahia/Services/StoreServices.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../Providers/StoreProvider.dart';
 
 class VendorBanner extends StatefulWidget {
   @override
@@ -13,8 +12,6 @@ class VendorBanner extends StatefulWidget {
 }
 
 class _VendorBannerState extends State<VendorBanner> {
-  StoreServices _services = StoreServices();
-
   int _index = 0;
   int _dataLenght = 1;
 
@@ -30,7 +27,7 @@ class _VendorBannerState extends State<VendorBanner> {
     var _firestore = FirebaseFirestore.instance;
     QuerySnapshot snapshot = await _firestore
         .collection('vendorBanner')
-        .where('sellerUid', isEqualTo: storeProvider.storeDetails['uid'])
+        .where('sellerUid', isEqualTo: storeProvider.storeDetails!['uid'])
         .get();
     if (mounted) {
       setState(() {
@@ -64,7 +61,7 @@ class _VendorBannerState extends State<VendorBanner> {
                                 (BuildContext context, int itemIndex, index) {
                               DocumentSnapshot sliderImage =
                                   snapShot.data[itemIndex];
-                              Map getImage = sliderImage.data();
+                              Map getImage = sliderImage as Map;
 
                               return SizedBox(
                                 width: MediaQuery.of(context).size.width,

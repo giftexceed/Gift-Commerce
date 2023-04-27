@@ -1,9 +1,9 @@
-import 'package:ahia/Providers/StoreProvider.dart';
-import 'package:ahia/Services/ProductServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../Providers/StoreProvider.dart';
+import '../../Services/ProductServices.dart';
 
 class ProductFilterWidget extends StatefulWidget {
   @override
@@ -50,7 +50,8 @@ class _ProductFilterWidgetState extends State<ProductFilterWidget> {
           return Container();
         }
 
-        Map<String, dynamic> data = snapshot.data.data();
+        Map<String, dynamic>? data =
+            snapshot.data!.data() as Map<String, dynamic>?;
         return Container(
           height: 50,
           color: Colors.grey,
@@ -67,7 +68,7 @@ class _ProductFilterWidgetState extends State<ProductFilterWidget> {
                 backgroundColor: Colors.white,
               ),
               ListView.builder(
-                itemCount: data.length,
+                itemCount: data!.length,
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 physics: ScrollPhysics(),

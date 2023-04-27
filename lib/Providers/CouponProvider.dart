@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class CouponProvider with ChangeNotifier {
-  bool expired;
-  DocumentSnapshot document;
+  bool? expired;
+  DocumentSnapshot? document;
   int discountRate = 0;
 
   getCouponDetails(title, sellerId) async {
@@ -13,7 +13,7 @@ class CouponProvider with ChangeNotifier {
     if (document.exists) {
       this.document = document;
       notifyListeners();
-      if (document.data()['sellerId'] == sellerId) {
+      if (document['sellerId'] == sellerId) {
         checkExpiry(document);
       }
     } else {
@@ -23,16 +23,16 @@ class CouponProvider with ChangeNotifier {
   }
 
   checkExpiry(DocumentSnapshot document) {
-    DateTime date = document.data()['expiryDate'].toDate();
+    DateTime date = document['expiryDate'].toDate();
     var dateDiff = date.difference(DateTime.now()).inDays;
     if (dateDiff < 0) {
       // coupon is expired
-      this.expired = true;
+      expired = true;
       notifyListeners();
     } else {
       this.document = document;
-      this.expired = false;
-      this.discountRate = document.data()['discountRate'];
+      expired = false;
+      discountRate = document['discountRate'];
       notifyListeners();
     }
   }

@@ -1,14 +1,14 @@
-import 'package:ahia/Services/CartServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gift_mart/Services/CartServices.dart';
 
 class CartProvider with ChangeNotifier {
   CartServices _cart = CartServices();
   double subTotal = 0.0;
   int cartQty = 0;
-  QuerySnapshot snapshot;
-  DocumentSnapshot document;
+  QuerySnapshot? snapshot;
+  DocumentSnapshot? document;
   double saving = 0.0;
   bool cod = false;
   List cartList = [];
@@ -18,25 +18,23 @@ class CartProvider with ChangeNotifier {
     var saving = 0.0;
     List _newList = [];
     QuerySnapshot snapshot =
-        await _cart.cart.doc(_cart.user.uid).collection('products').get();
-    if (snapshot == null) {
-      return null;
-    }
-    snapshot.docs.forEach((doc) {
-      if (!_newList.contains(doc.data())) {
+        await _cart.cart.doc(_cart.user!.uid).collection('products').get();
+
+    for (var doc in snapshot.docs) {
+      if (!_newList.contains(doc)) {
         _newList.add(doc.data());
-        this.cartList = _newList;
+        cartList = _newList;
         notifyListeners();
       }
-      cartTotal = cartTotal + doc.data()['total'];
+      cartTotal = cartTotal + doc['total'];
       saving = saving +
-          ((doc.data()['comparedPrice'] - doc.data()['price']) > 0
-              ? doc.data()['comparedPrice'] - doc.data()['price']
+          ((doc['comparedPrice'] - doc['price']) > 0
+              ? doc['comparedPrice'] - doc['price']
               : 0);
-    });
+    }
 
-    this.subTotal = cartTotal;
-    this.cartQty = snapshot.size;
+    subTotal = cartTotal;
+    cartQty = snapshot.size;
     this.snapshot = snapshot;
     this.saving = saving;
     notifyListeners();
@@ -46,21 +44,21 @@ class CartProvider with ChangeNotifier {
 
   getPaymentMethod(index) {
     if (index == 0) {
-      this.cod = false;
+      cod = false;
       notifyListeners();
     } else {
-      this.cod = true;
+      cod = true;
       notifyListeners();
     }
   }
 
   getShopName() async {
-    DocumentSnapshot doc = await _cart.cart.doc(_cart.user.uid).get();
+    DocumentSnapshot doc = await _cart.cart.doc(_cart.user!.uid).get();
     if (doc.exists) {
-      this.document = doc;
+      document = doc;
       notifyListeners();
     } else {
-      this.document = null;
+      document = null;
       notifyListeners();
     }
   }

@@ -1,21 +1,26 @@
-import 'package:ahia/Services/CartServices.dart';
-import 'package:ahia/Widgets/Products/AddToCartWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../../Services/CartServices.dart';
+import '../Products/AddToCartWidget.dart';
 
 class CounterWidget extends StatefulWidget {
   final DocumentSnapshot document;
   final int qty;
   final String docId;
-  CounterWidget({this.document, this.qty, this.docId});
+  const CounterWidget(
+      {super.key,
+      required this.document,
+      required this.qty,
+      required this.docId});
 
   @override
   _CounterWidgetState createState() => _CounterWidgetState();
 }
 
 class _CounterWidgetState extends State<CounterWidget> {
-  CartServices _cart = CartServices();
-  int _qty;
+  final CartServices _cart = CartServices();
+  int? _qty;
   bool _updating = false;
   bool _exists = true;
 
@@ -48,11 +53,9 @@ class _CounterWidgetState extends State<CounterWidget> {
                           _cart.checkCartData();
                         });
                       }
-                      if (_qty > 1) {
-                        setState(() {
-                          _qty--;
-                        });
-                        var total = _qty * widget.document.data()['price'];
+                      if (_qty! > 1) {
+                        setState(() {});
+                        var total = _qty! * widget.document['price'];
                         _cart
                             .updateCartQty(widget.docId, _qty, total)
                             .then((value) {
@@ -96,9 +99,8 @@ class _CounterWidgetState extends State<CounterWidget> {
                     onTap: () {
                       setState(() {
                         _updating = true;
-                        _qty++;
                       });
-                      var total = _qty * widget.document.data()['price'];
+                      var total = _qty! * widget.document['price'];
 
                       _cart
                           .updateCartQty(widget.docId, _qty, total)

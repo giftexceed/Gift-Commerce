@@ -1,8 +1,9 @@
-import 'package:ahia/Auth/OnBoardScreen.dart';
-import 'package:ahia/Pages/SetDeliveryAddress.dart';
-import 'package:ahia/Providers/Auth_Provider.dart';
 import 'package:flutter/material.dart';
+import 'package:gift_mart/Pages/SetDeliveryAddress.dart';
 import 'package:provider/provider.dart';
+
+import '../Providers/Auth_Provider.dart';
+import 'OnBoardScreen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome-screen';
@@ -35,25 +36,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           child: Column(
                         children: [
                           Text('${auth.error} - Please try again',
-                              style: TextStyle(color: Colors.red)),
+                              style: const TextStyle(color: Colors.red)),
                         ],
                       )),
                     ),
-                    SizedBox(height: 5),
-                    Text(
+                    const SizedBox(height: 5),
+                    const Text(
                       'LOGIN',
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87),
                     ),
-                    Text('Enter your phone number to proceed',
+                    const Text('Enter your phone number to proceed',
                         style: TextStyle(fontSize: 14)),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixText: '+234',
                         labelText:
                             'Enter your phone number (Eg. +2348030000000)',
@@ -74,7 +75,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         }
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -100,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 });
                               },
                               child: auth.loading
-                                  ? CircularProgressIndicator(
+                                  ? const CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           Colors.white),
                                     )
@@ -108,7 +109,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       _isValidPhoneNumber
                                           ? 'Continue'
                                           : 'Enter Phone Number',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white, fontSize: 14),
                                     ),
                             ),
@@ -147,23 +148,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               )),
           Column(children: [
             Expanded(child: OnBoardScreen()),
-            Text(
+            const Text(
               'Start ordering from shops around you today',
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextButton(
-              child: Text('Set Delivery Location',
+              child: const Text('Set Delivery Location',
                   style: TextStyle(color: Colors.white)),
               onPressed: () async {
                 Navigator.pushNamed(context, SetDeliveryLocation.id);
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextButton(
               child: RichText(
                 text: TextSpan(
                     text: 'Already a customer? ',
-                    style: TextStyle(color: Colors.black87),
+                    style: const TextStyle(color: Colors.black87),
                     children: [
                       TextSpan(
                           text: ' Login',

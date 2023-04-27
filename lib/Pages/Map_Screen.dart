@@ -1,13 +1,14 @@
-import 'package:ahia/Auth/LoginScreen.dart';
-import 'package:ahia/Pages/HomeScreen.dart';
-import 'package:ahia/Providers/Auth_Provider.dart';
-import 'package:ahia/Providers/Location_Provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../Auth/LoginScreen.dart';
+import '../Providers/Auth_Provider.dart';
+import '../Providers/Location_Provider.dart';
+import 'HomeScreen.dart';
 
 class MapScreen extends StatefulWidget {
   static const String id = 'map-screen';
@@ -17,11 +18,11 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  LatLng currentLocation;
-  GoogleMapController _mapController;
+  LatLng? currentLocation;
+  GoogleMapController? _mapController;
   bool _locating = false;
   bool _loggedIn = false;
-  User user;
+  User? user;
 
   @override
   void initState() {
@@ -51,7 +52,7 @@ class _MapScreenState extends State<MapScreen> {
     final _auth = Provider.of<AuthProvider>(context);
 
     setState(() {
-      currentLocation = LatLng(locationData.latitude, locationData.longitude);
+      currentLocation = LatLng(locationData.latitude!, locationData.longitude!);
     });
 
     void onCreated(GoogleMapController controller) {
@@ -65,7 +66,7 @@ class _MapScreenState extends State<MapScreen> {
             child: Stack(children: [
       GoogleMap(
         initialCameraPosition:
-            CameraPosition(target: currentLocation, zoom: 14.4746),
+            CameraPosition(target: currentLocation!, zoom: 14.4746),
         zoomControlsEnabled: false,
         minMaxZoomPreference: MinMaxZoomPreference(1.5, 20.8),
         myLocationEnabled: true,
@@ -150,16 +151,11 @@ class _MapScreenState extends State<MapScreen> {
                               if (_loggedIn == false) {
                                 Navigator.pushNamed(context, LoginScreen.id);
                               } else {
-                                setState(() {
-                                  // _auth.latitude -= locationData.latitude;
-                                  // _auth.longitude = locationData.longitude;
-                                  // _auth.address =
-                                  //     locationData.selectedAddress.addressLine;
-                                });
+                                setState(() {});
                                 _auth
                                     .updateUser(
-                                  id: user.uid,
-                                  number: user.phoneNumber,
+                                  id: user!.uid,
+                                  number: user!.phoneNumber,
                                 )
                                     .then((value) {
                                   if (value == true) {

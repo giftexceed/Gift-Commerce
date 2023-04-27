@@ -1,16 +1,17 @@
-import 'package:ahia/Widgets/Cart/Counter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'Counter.dart';
+
 class CartCard extends StatelessWidget {
   final DocumentSnapshot document;
-  CartCard({this.document});
+  CartCard({required this.document});
   @override
   Widget build(BuildContext context) {
-    double saving = document.data()['comparedPrice'] - document.data()['price'];
+    double saving = document['comparedPrice'] - document['price'];
     return Container(
       height: 120,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.grey)),
         color: Colors.white,
       ),
@@ -25,7 +26,7 @@ class CartCard extends StatelessWidget {
                   width: 120,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Image.network(document.data()['productImage'],
+                    child: Image.network(document['productImage'],
                         fit: BoxFit.cover),
                   ),
                 ),
@@ -35,15 +36,14 @@ class CartCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(document.data()['productName']),
-                        if (document.data()['comparedPrice'] >
-                            document.data()['price'])
+                        Text(document['productName']),
+                        if (document['comparedPrice'] > document['price'])
                           Text(
-                              'N${document.data()['comparedPrice'].toStringAsFixed(0)}',
+                              'N${document['comparedPrice'].toStringAsFixed(0)}',
                               style: TextStyle(
                                   decoration: TextDecoration.lineThrough,
                                   fontSize: 12)),
-                        Text('N${document.data()['price'].toStringAsFixed(0)}',
+                        Text('N${document['price'].toStringAsFixed(0)}',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),

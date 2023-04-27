@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
-  final String productName, category, image, brand, shopName;
-  final num price;
-  final DocumentSnapshot document;
+  final String? productName, category, image, brand, shopName;
+  final num? price;
+  final DocumentSnapshot? document;
 
   Product({
     this.productName,
@@ -17,9 +17,9 @@ class Product {
 }
 
 class AllProduct {
-  final String productName, category, image, brand;
-  final num price;
-  final DocumentSnapshot document;
+  final String? productName, category, image, brand;
+  final num? price;
+  final DocumentSnapshot? document;
 
   AllProduct({
     this.productName,

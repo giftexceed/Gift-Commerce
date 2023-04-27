@@ -43,10 +43,10 @@ class SaveForLater extends StatelessWidget {
   Future<void> addToFavourite() {
     CollectionReference _favourite =
         FirebaseFirestore.instance.collection('favourites');
-    User user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
     return _favourite.add({
       'product': document.data(),
-      'customerId': user.uid,
+      'customerId': user!.uid,
     });
   }
 }

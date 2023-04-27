@@ -1,10 +1,10 @@
-import 'package:ahia/Providers/StoreProvider.dart';
-import 'package:ahia/Services/ProductServices.dart';
-import 'package:ahia/Widgets/Products/ProductCardWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gift_mart/Services/ProductServices.dart';
 import 'package:provider/provider.dart';
+
+import '../../Providers/StoreProvider.dart';
+import 'ProductCardWidget.dart';
 
 class RecentlyAddedProducts extends StatelessWidget {
   @override
@@ -14,12 +14,12 @@ class RecentlyAddedProducts extends StatelessWidget {
     return FutureBuilder<QuerySnapshot>(
       future: _services.product
           .where('published', isEqualTo: true)
-          .where('seller.sellerUid', isEqualTo: _store.storeDetails['uid'])
+          .where('seller.sellerUid', isEqualTo: _store.storeDetails!['uid'])
           .where('collection', isEqualTo: 'Recently Added')
           .get(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('Something went wrong'));
+          return const Center(child: Text('Something went wrong'));
         }
 
         // if (snapshot.connectionState == ConnectionState.waiting) {
@@ -28,7 +28,7 @@ class RecentlyAddedProducts extends StatelessWidget {
         if (!snapshot.hasData) {
           return Container();
         }
-        if (snapshot.data.docs.isEmpty) {
+        if (snapshot.data!.docs.isEmpty) {
           return Container();
         }
 
@@ -42,7 +42,7 @@ class RecentlyAddedProducts extends StatelessWidget {
                 child: Container(
                   height: 60,
                   width: MediaQuery.of(context).size.width,
-                  child: Center(
+                  child: const Center(
                     child: FittedBox(
                       child: Text('Recently Added Products',
                           style: TextStyle(
@@ -62,11 +62,11 @@ class RecentlyAddedProducts extends StatelessWidget {
                 ),
               ),
             ),
-            new ListView(
+            ListView(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: snapshot.data.docs.map((DocumentSnapshot document) {
-                return new ProductCard(document);
+              physics: const NeverScrollableScrollPhysics(),
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                return ProductCard(document);
               }).toList(),
             ),
           ],

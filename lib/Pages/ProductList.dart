@@ -1,8 +1,9 @@
-import 'package:ahia/Providers/StoreProvider.dart';
-import 'package:ahia/Widgets/Products/ProductFilterWidget.dart';
-import 'package:ahia/Widgets/Products/ProductListWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../Providers/StoreProvider.dart';
+import '../Widgets/Products/ProductFilterWidget.dart';
+import '../Widgets/Products/ProductListWidget.dart';
 
 class ProductList extends StatelessWidget {
   static const String id = 'product-list';
@@ -16,14 +17,14 @@ class ProductList extends StatelessWidget {
           SliverAppBar(
             floating: true,
             snap: true,
-            title: Text(_storeProvider.selectedProductCategory,
-                style: TextStyle(color: Colors.white)),
-            iconTheme: IconThemeData(
+            title: Text(_storeProvider.selectedProductCategory!,
+                style: const TextStyle(color: Colors.white)),
+            iconTheme: const IconThemeData(
               color: Colors.white,
             ),
             expandedHeight: 110,
             flexibleSpace: Padding(
-              padding: EdgeInsets.only(top: 88),
+              padding: const EdgeInsets.only(top: 88),
               child: Container(
                 height: 56,
                 color: Colors.grey,

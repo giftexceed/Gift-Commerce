@@ -1,10 +1,11 @@
-import 'package:ahia/Services/CartServices.dart';
-import 'package:ahia/Widgets/Cart/CounterWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:gift_mart/Services/CartServices.dart';
+
+import '../Cart/CounterWidget.dart';
 
 class AddToCartWidget extends StatefulWidget {
   final DocumentSnapshot document;
@@ -17,11 +18,11 @@ class AddToCartWidget extends StatefulWidget {
 
 class _AddToCartWidgetState extends State<AddToCartWidget> {
   CartServices _cart = CartServices();
-  User user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
   bool _loading = true;
   bool _exist = false;
   int _qty = 1;
-  String _docId;
+  String? _docId;
 
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
 
   getCartData() async {
     final snapshot =
-        await _cart.cart.doc(user.uid).collection('products').get();
+        await _cart.cart.doc(user!.uid).collection('products').get();
     if (snapshot.docs.length == 0) {
       setState(() {
         _loading = false;
@@ -48,13 +49,13 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
   Widget build(BuildContext context) {
     FirebaseFirestore.instance
         .collection('cart')
-        .doc(user.uid)
+        .doc(user!.uid)
         .collection('products')
-        .where('productId', isEqualTo: widget.document.data()['productId'])
+        .where('productId', isEqualTo: widget.document['productId'])
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        if (doc['productId'] == widget.document.data()['productId']) {
+        if (doc['productId'] == widget.document['productId']) {
           // meaning product already exists in particular users cart
           setState(() {
             _exist = true;
@@ -78,14 +79,13 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
             ? CounterWidget(
                 document: widget.document,
                 qty: _qty,
-                docId: _docId,
+                docId: _docId!,
               )
             : InkWell(
                 onTap: () {
                   EasyLoading.show(status: 'Adding to cart');
                   _cart.checkSeller().then((shopName) {
-                    if (shopName ==
-                        widget.document.data()['seller']['shopName']) {
+                    if (shopName == widget.document['seller']['shopName']) {
                       setState(() {
                         _exist = true;
                       });
@@ -107,19 +107,11 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
                       return;
                     }
 
-                    if (shopName !=
-                        widget.document.data()['seller']['shopName']) {
+                    if (shopName != widget.document['seller']['shopName']) {
                       EasyLoading.dismiss();
                       showDialog(shopName);
                     }
                   });
-
-                  // _cart.addToCart(widget.document).then((value) {
-                  //   setState(() {
-                  //     _exist = true;
-                  //   });
-                  // });
-                  // EasyLoading.showSuccess('Added to cart');
                 },
                 child: Container(
                   height: 80,
@@ -130,9 +122,9 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(CupertinoIcons.cart, color: Colors.white),
-                          SizedBox(width: 10),
-                          Text('Add to cart',
+                          const Icon(CupertinoIcons.cart, color: Colors.white),
+                          const SizedBox(width: 10),
+                          const Text('Add to cart',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold)),
@@ -149,18 +141,18 @@ class _AddToCartWidgetState extends State<AddToCartWidget> {
         context: context,
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
-            title: Text('Replace Cart Item'),
+            title: const Text('Replace Cart Item'),
             content: Text(
-                'Your cart contains item(s) from $shopName. Do you want to remove the current item(s) and add item(s) from ${widget.document.data()['seller']['shopName']}'),
+                'Your cart contains item(s) from $shopName. Do you want to remove the current item(s) and add item(s) from ${widget.document['seller']['shopName']}'),
             actions: [
               TextButton(
-                child: Text('No'),
+                child: const Text('No'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               TextButton(
-                child: Text('Yes'),
+                child: const Text('Yes'),
                 onPressed: () {
                   _cart.deleteCart().then((value) {
                     _cart.addToCart(widget.document).then((value) {

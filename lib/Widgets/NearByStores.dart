@@ -1,10 +1,11 @@
-import 'package:ahia/Helper/Constant.dart';
-import 'package:ahia/Services/StoreServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
+
+import '../Helper/Constant.dart';
+import '../Services/StoreServices.dart';
 
 class NearByStores extends StatelessWidget {
   @override
@@ -17,9 +18,9 @@ class NearByStores extends StatelessWidget {
       child: StreamBuilder<QuerySnapshot>(
         stream: _storeServices.getStores(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapShot) {
-          if (!snapShot.hasData) return CircularProgressIndicator();
+          if (!snapShot.hasData) return const CircularProgressIndicator();
           return Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               RefreshIndicator(
@@ -33,29 +34,29 @@ class NearByStores extends StatelessWidget {
                   ),
                   header: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 8, right: 8, top: 20),
+                          padding: EdgeInsets.only(left: 8, right: 8, top: 20),
                           child: Text('Featured Stores',
                               style: TextStyle(
                                   fontWeight: FontWeight.w900, fontSize: 18)),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8, right: 8, bottom: 20),
+                          padding:
+                              EdgeInsets.only(left: 8, right: 8, bottom: 20),
                           child: Text('Buy Nigerian... Grow Nigeria',
                               style:
                                   TextStyle(fontSize: 12, color: Colors.grey)),
                         ),
                       ]),
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilderType: PaginateBuilderType.listView,
                   itemBuilder: (index, context, document) => Padding(
                     padding: const EdgeInsets.all(4),
                     child: Container(
-                        width: MediaQuery.of(context).size.width,
+                        width:
+                            MediaQuery.of(context as BuildContext).size.width,
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -67,49 +68,50 @@ class NearByStores extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(4),
                                           child: Image.network(
-                                            document['shopImage'],
+                                            document as String,
                                             fit: BoxFit.cover,
                                           )))),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     child: Text(
-                                      document.data()['shopName'],
+                                      document as String,
                                       style: storeCardStyle,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  SizedBox(height: 3),
+                                  const SizedBox(height: 3),
                                   Container(
                                     width:
-                                        MediaQuery.of(context).size.width - 250,
+                                        MediaQuery.of(context as BuildContext)
+                                                .size
+                                                .width -
+                                            250,
                                     child: Text(
-                                      document.data()['shopAddress'],
+                                      document as String,
                                       overflow: TextOverflow.ellipsis,
                                       style: storeCardStyle,
                                     ),
                                   ),
-                                  SizedBox(height: 3),
-                                  Text(
-                                    document.data()['shopCity'] +
-                                        ' - ' +
-                                        document.data()['shopState'],
+                                  const SizedBox(height: 3),
+                                  const Text(
+                                    'doc',
                                     style: storeCardStyle,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  SizedBox(height: 3),
+                                  const SizedBox(height: 3),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.star,
                                         size: 12,
                                         color: Colors.grey,
                                       ),
-                                      SizedBox(width: 3),
+                                      const SizedBox(width: 3),
                                       Text(
                                         '3.2',
                                         style: storeCardStyle,
@@ -128,7 +130,7 @@ class NearByStores extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 30),
                     child: Container(
                       child: Stack(
-                        children: [
+                        children: const [
                           Center(
                             child: Text('***'),
                           )

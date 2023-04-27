@@ -1,9 +1,10 @@
-import 'package:ahia/Services/CartServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import '../../Services/CartServices.dart';
 
 class CounterForCard extends StatefulWidget {
   final DocumentSnapshot document;
@@ -13,26 +14,25 @@ class CounterForCard extends StatefulWidget {
 }
 
 class _CounterForCardState extends State<CounterForCard> {
-  User user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
   CartServices _cart = CartServices();
   int _qty = 1;
-  String _docId;
+  String? _docId;
   bool _exists = false;
   bool _updating = false;
 
   getCartData() {
     FirebaseFirestore.instance
         .collection('cart')
-        .doc(user.uid)
+        .doc(user!.uid)
         .collection('products')
-        .where('productId', isEqualTo: widget.document.data()['productId'])
+        .where('productId', isEqualTo: widget.document['productId'])
         .get()
         .then((QuerySnapshot querySnapshot) => {
               if (querySnapshot.docs.isNotEmpty)
                 {
                   querySnapshot.docs.forEach((doc) {
-                    if (doc['productId'] ==
-                        widget.document.data()['productId']) {
+                    if (doc['productId'] == widget.document['productId']) {
                       // meaning product already exists in particular users cart
                       setState(() {
                         _qty = doc['quantity'];
@@ -91,7 +91,7 @@ class _CounterForCardState extends State<CounterForCard> {
                             setState(() {
                               _qty--;
                             });
-                            var total = _qty * widget.document.data()['price'];
+                            var total = _qty * widget.document['price'];
 
                             _cart
                                 .updateCartQty(_docId, _qty, total)
@@ -131,7 +131,7 @@ class _CounterForCardState extends State<CounterForCard> {
                             _updating = true;
                             _qty++;
                           });
-                          var total = _qty * widget.document.data()['price'];
+                          var total = _qty * widget.document['price'];
 
                           _cart
                               .updateCartQty(_docId, _qty, total)
@@ -159,8 +159,7 @@ class _CounterForCardState extends State<CounterForCard> {
 
                   // remove entire checkSeller() function to allow customers buy from different vendors
                   _cart.checkSeller().then((shopName) {
-                    if (shopName ==
-                        widget.document.data()['seller']['shopName']) {
+                    if (shopName == widget.document['seller']['shopName']) {
                       setState(() {
                         _exists = true;
                       });
@@ -182,8 +181,7 @@ class _CounterForCardState extends State<CounterForCard> {
                       return;
                     }
 
-                    if (shopName !=
-                        widget.document.data()['seller']['shopName']) {
+                    if (shopName != widget.document['seller']['shopName']) {
                       EasyLoading.dismiss();
                       showDialog(shopName);
                     }
@@ -225,7 +223,7 @@ class _CounterForCardState extends State<CounterForCard> {
           return CupertinoAlertDialog(
             title: Text('Replace Cart Item'),
             content: Text(
-                'Your cart contains item(s) from $shopName. Do you want to remove the current item(s) and add item(s) from ${widget.document.data()['seller']['shopName']}'),
+                'Your cart contains item(s) from $shopName. Do you want to remove the current item(s) and add item(s) from ${widget.document['seller']['shopName']}'),
             actions: [
               TextButton(
                 child: Text('No'),

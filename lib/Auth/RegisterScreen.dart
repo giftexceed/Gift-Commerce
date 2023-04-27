@@ -8,7 +8,7 @@ class RegisterScreen extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(100),
         child: Column(
-          children: [
+          children: const [
             Hero(
               tag: 'Ahia logo',
               child: Text(

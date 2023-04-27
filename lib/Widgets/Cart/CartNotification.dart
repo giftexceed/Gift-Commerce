@@ -1,8 +1,6 @@
-import 'package:ahia/Pages/CartPage.dart';
-import 'package:ahia/Providers/CartProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:gift_mart/Providers/CartProvider.dart';
 import 'package:provider/provider.dart';
 
 class CartNotification extends StatefulWidget {
@@ -27,7 +25,7 @@ class _CartNotificationState extends State<CartNotification> {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topRight: Radius.circular(20),
             topLeft: Radius.circular(20),
           ),
@@ -47,53 +45,33 @@ class _CartNotificationState extends State<CartNotification> {
                       children: [
                         Text(
                           '${_cartProvider.cartQty}${_cartProvider.cartQty == 1 ? ' item in cart' : ' items in cart'}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(' | ',
+                        const Text(' | ',
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20)),
                         Text(
                           'Sub-Total: NGN${_cartProvider.subTotal.toStringAsFixed(0)}',
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         )
                       ],
                     ),
-                    // if (_cartProvider.cartQty > 0)
-                    //   // if (document.exists)
-                    //   Text(
-                    //     'From ${document.data()['shopName']}',
-                    //     style: TextStyle(
-                    //       color: Colors.white,
-                    //       fontWeight: FontWeight.bold,
-                    //     ),
-                    //   ),
                   ],
                 ),
               ),
               InkWell(
-                onTap: () {
-                  pushNewScreenWithRouteSettings(
-                    context,
-                    settings: RouteSettings(name: CartPage.id),
-                    screen: CartPage(
-                      document: _cartProvider.document,
-                    ),
-                    withNavBar: true,
-                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                  );
-                },
-                child: Container(
-                    child: Row(children: [
+                onTap: () {},
+                child: Row(children: const [
                   Text('View Cart',
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold)),
                   SizedBox(width: 5),
                   Icon(CupertinoIcons.cart_fill, color: Colors.red)
-                ])),
+                ]),
               )
             ],
           ),

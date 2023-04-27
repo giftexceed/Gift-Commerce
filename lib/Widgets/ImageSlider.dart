@@ -40,7 +40,7 @@ class _ImageSliderState extends State<ImageSlider> {
               future: getSliderImageFromDb(),
               builder: (_, snapShot) {
                 return snapShot.data == null
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : Padding(
@@ -51,7 +51,7 @@ class _ImageSliderState extends State<ImageSlider> {
                               (BuildContext context, int itemIndex, index) {
                             DocumentSnapshot sliderImage =
                                 snapShot.data[itemIndex];
-                            Map getImage = sliderImage.data();
+                            Map getImage = sliderImage as Map;
 
                             return SizedBox(
                               width: MediaQuery.of(context).size.width,

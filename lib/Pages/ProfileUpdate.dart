@@ -1,8 +1,8 @@
-import 'package:ahia/Services/UserServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:gift_mart/Services/UserServices.dart';
 
 class UpdateProfile extends StatefulWidget {
   static const String id = 'update-profile';
@@ -12,7 +12,7 @@ class UpdateProfile extends StatefulWidget {
 
 class _UpdateProfileState extends State<UpdateProfile> {
   final _formKey = GlobalKey<FormState>();
-  User user = FirebaseAuth.instance.currentUser;
+  User user = FirebaseAuth.instance.currentUser!;
   UserServices _userServices = UserServices();
   var firstName = TextEditingController();
   var lastName = TextEditingController();
@@ -36,10 +36,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
     _userServices.getUserById(user.uid).then((value) {
       if (mounted) {
         setState(() {
-          firstName.text = value.data()['firstName'];
-          lastName.text = value.data()['lastName'];
-          email.text = value.data()['email'];
-          phoneNumber.text = user.phoneNumber;
+          firstName.text = value['firstName'];
+          lastName.text = value['lastName'];
+          email.text = value['email'];
+          phoneNumber.text = user.phoneNumber!;
         });
       }
     });
@@ -51,15 +51,15 @@ class _UpdateProfileState extends State<UpdateProfile> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Update Profile',
           style: TextStyle(color: Colors.white),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       bottomSheet: InkWell(
         onTap: () {
-          if (_formKey.currentState.validate()) {
+          if (_formKey.currentState!.validate()) {
             EasyLoading.show(status: 'Updating profile...');
             updateProfile().then((value) {
               EasyLoading.showSuccess('Profile Updated Successfully');
@@ -71,7 +71,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           width: double.infinity,
           height: 56,
           color: Colors.blueGrey[900],
-          child: Center(
+          child: const Center(
               child: Text('Update',
                   style: TextStyle(
                       color: Colors.white,
@@ -89,31 +89,31 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 Expanded(
                     child: TextFormField(
                   controller: firstName,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'First Name',
                     labelStyle: TextStyle(color: Colors.grey),
                     contentPadding: EdgeInsets.zero,
                   ),
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value!.isEmpty) {
                       return 'Enter First Name ';
                     }
                     return null;
                   },
                 )),
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Expanded(
                     child: TextFormField(
                   controller: lastName,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Last Name',
                     labelStyle: TextStyle(color: Colors.grey),
                     contentPadding: EdgeInsets.zero,
                   ),
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value!.isEmpty) {
                       return 'Enter Last Name ';
                     }
                     return null;
@@ -121,13 +121,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 )),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             TextFormField(
               controller: phoneNumber,
               enabled: false,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 prefixText: '+234',
                 labelText: 'Phone Number',
                 labelStyle: TextStyle(color: Colors.grey),
@@ -135,25 +135,25 @@ class _UpdateProfileState extends State<UpdateProfile> {
               ),
               keyboardType: TextInputType.phone,
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Enter Phone Number';
                 }
                 return null;
               },
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Expanded(
                 child: TextFormField(
               controller: email,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 labelStyle: TextStyle(color: Colors.grey),
                 contentPadding: EdgeInsets.zero,
               ),
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Enter Email Address ';
                 }
                 return null;

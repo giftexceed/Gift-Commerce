@@ -1,28 +1,25 @@
-import 'package:ahia/Pages/ProfileScreen.dart';
-import 'package:ahia/Pages/SetDeliveryAddress.dart';
-import 'package:ahia/Providers/Auth_Provider.dart';
-import 'package:ahia/Providers/CartProvider.dart';
-import 'package:ahia/Providers/CouponProvider.dart';
-import 'package:ahia/Services/CartServices.dart';
-import 'package:ahia/Services/OnlinePayment.dart';
-import 'package:ahia/Services/OrderServices.dart';
-import 'package:ahia/Services/StoreServices.dart';
-import 'package:ahia/Services/UserServices.dart';
-import 'package:ahia/Widgets/Cart/CartList.dart';
-import 'package:ahia/Widgets/Cart/CodToggle.dart';
-import 'package:ahia/Widgets/Cart/CouponWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:gift_mart/Services/CartServices.dart';
 import 'package:provider/provider.dart';
+import '../Providers/Auth_Provider.dart';
+import '../Providers/CartProvider.dart';
+import '../Providers/CouponProvider.dart';
+import '../Services/OnlinePayment.dart';
+import '../Services/OrderServices.dart';
+import '../Services/StoreServices.dart';
+import '../Services/UserServices.dart';
+import '../Widgets/Cart/CartList.dart';
+import '../Widgets/Cart/CodToggle.dart';
+import '../Widgets/Cart/CouponWidget.dart';
 
 class CartPage extends StatefulWidget {
   static const String id = 'cart-page';
   final DocumentSnapshot document;
   // final User user;
-  CartPage({this.document});
+  const CartPage({super.key, required this.document});
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -30,25 +27,25 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   StoreServices _store = StoreServices();
-  UserServices _ahiaUser = UserServices();
+  final UserServices _ahiaUser = UserServices();
   OrderServices _orderServices = OrderServices();
   CartServices _cartServices = CartServices();
   var user = FirebaseAuth.instance.currentUser;
-  DocumentSnapshot doc;
-  DocumentSnapshot userDoc;
+  DocumentSnapshot? doc;
+  DocumentSnapshot? userDoc;
 
   double deliveryFee = 10.00;
-  var textstyle = TextStyle(color: Colors.grey);
-  String _address;
-  String _city;
-  String _state;
+  var textstyle = const TextStyle(color: Colors.grey);
+  String? _address;
+  String? _city;
+  String? _state;
   bool _checkingUser = false;
   double discount = 0;
 
   @override
   void initState() {
     getDeliveryAddress();
-    _store.getShopDetails(widget.document.data()['sellerUid']).then((value) {
+    _store.getShopDetails(widget.document['sellerUid']).then((value) {
       setState(() {
         doc = value;
       });
@@ -57,12 +54,12 @@ class _CartPageState extends State<CartPage> {
   }
 
   getDeliveryAddress() {
-    _ahiaUser.getUserById(user.uid).then((value) {
+    _ahiaUser.getUserById(user!.uid).then((value) {
       setState(() {
         userDoc = value;
-        _address = userDoc.data()['address'];
-        _city = userDoc.data()['city'];
-        _state = userDoc.data()['state'];
+        _address = userDoc!['address'];
+        _city = userDoc!['city'];
+        _state = userDoc!['state'];
       });
     });
   }
@@ -104,7 +101,7 @@ class _CartPageState extends State<CartPage> {
                           children: [
                             Row(
                               children: [
-                                Expanded(
+                                const Expanded(
                                   child: Text(
                                     'Delivery Address:',
                                     style: TextStyle(
@@ -113,21 +110,21 @@ class _CartPageState extends State<CartPage> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  child: Text('Change Delivery Address',
+                                  child: const Text('Change Delivery Address',
                                       style: TextStyle(
                                           color: Colors.red,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold)),
                                   onTap: () {
-                                    pushNewScreenWithRouteSettings(
-                                      context,
-                                      settings: RouteSettings(
-                                          name: SetDeliveryLocation.id),
-                                      screen: SetDeliveryLocation(),
-                                      withNavBar: true,
-                                      pageTransitionAnimation:
-                                          PageTransitionAnimation.cupertino,
-                                    );
+                                    // pushNewScreenWithRouteSettings(
+                                    //   context,
+                                    //   settings: RouteSettings(
+                                    //       name: SetDeliveryLocation.id),
+                                    //   screen: SetDeliveryLocation(),
+                                    //   withNavBar: true,
+                                    //   pageTransitionAnimation:
+                                    //       PageTransitionAnimation.cupertino,
+                                    // );
                                     // Navigator.pushNamed(
                                     //     context, SetDeliveryLocation.id);
                                   },
@@ -138,11 +135,12 @@ class _CartPageState extends State<CartPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(_address, maxLines: 3, style: textstyle),
+                                  Text(_address!,
+                                      maxLines: 3, style: textstyle),
                                   Row(
                                     children: [
                                       Text('${_city} - ', style: textstyle),
-                                      Text(_state, style: textstyle),
+                                      Text(_state!, style: textstyle),
                                     ],
                                   ),
                                 ],
@@ -161,7 +159,7 @@ class _CartPageState extends State<CartPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text('Total: NGN${_total.toStringAsFixed(0)}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
                               // Text('(VAT included)',
@@ -170,8 +168,8 @@ class _CartPageState extends State<CartPage> {
                           ),
                           TextButton(
                             child: _checkingUser
-                                ? CircularProgressIndicator()
-                                : Text(
+                                ? const CircularProgressIndicator()
+                                : const Text(
                                     'Check Out',
                                     style: TextStyle(
                                         color: Colors.white,
@@ -180,19 +178,19 @@ class _CartPageState extends State<CartPage> {
                             onPressed: () {
                               EasyLoading.show(status: 'Please wait...');
 
-                              _ahiaUser.getUserById(user.uid).then((value) {
-                                if (value.data()['number'] == null) {
+                              _ahiaUser.getUserById(user!.uid).then((value) {
+                                if (value['number'] == null) {
                                   // might want to replace username with may be phone number
                                   EasyLoading.dismiss();
-                                  pushNewScreenWithRouteSettings(
-                                    context,
-                                    settings:
-                                        RouteSettings(name: ProfileScreen.id),
-                                    screen: ProfileScreen(),
-                                    withNavBar: false,
-                                    pageTransitionAnimation:
-                                        PageTransitionAnimation.cupertino,
-                                  );
+                                  // pushNewScreenWithRouteSettings(
+                                  //   context,
+                                  //   settings:
+                                  //       RouteSettings(name: ProfileScreen.id),
+                                  //   screen: ProfileScreen(),
+                                  //   withNavBar: false,
+                                  //   pageTransitionAnimation:
+                                  //       PageTransitionAnimation.cupertino,
+                                  // );
                                 } else {
                                   EasyLoading.show(status: 'Please wait...');
 
@@ -228,18 +226,20 @@ class _CartPageState extends State<CartPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.document.data()['shopName'],
-                    style: TextStyle(fontSize: 16),
+                    widget.document['shopName'],
+                    style: const TextStyle(fontSize: 16),
                   ),
                   Row(
                     children: [
                       Text(
                         '${_cartProvider.cartQty} ${_cartProvider.cartQty > 1 ? ' items in cart' : ' item in cart'}',
-                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                       Text(
                         ' | Total: NGN${_total.toStringAsFixed(0)}',
-                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -249,10 +249,10 @@ class _CartPageState extends State<CartPage> {
           ];
         },
         body: doc == null
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : _cartProvider.cartQty > 0
                 ? SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: 80),
+                    padding: const EdgeInsets.only(bottom: 80),
                     child: Container(
                       padding: EdgeInsets.only(
                           bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -266,18 +266,17 @@ class _CartPageState extends State<CartPage> {
                                 width: 60,
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.network(
-                                        doc.data()['shopImage'],
+                                    child: Image.network(doc!['shopImage'],
                                         fit: BoxFit.cover)),
                               ),
-                              title: Text(doc.data()['shopName']),
+                              title: Text(doc!['shopName']),
                               subtitle: Text(
-                                doc.data()['shopAddress'],
+                                doc!['shopAddress'],
                                 maxLines: 1,
                               ),
                             ),
                             CodToggleSwitch(),
-                            Divider(color: Colors.grey),
+                            const Divider(color: Colors.grey),
                           ],
                         ),
 
@@ -287,7 +286,7 @@ class _CartPageState extends State<CartPage> {
 
                         // coupon area
                         // if (userDoc != null)
-                        CouponWidget(doc.data()['uid']),
+                        CouponWidget(doc!['uid']),
 
                         // bill details card
                         Padding(
@@ -302,53 +301,55 @@ class _CartPageState extends State<CartPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('Bill Details',
+                                      const Text('Bill Details',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold)),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Row(
                                         children: [
-                                          Expanded(child: Text('Sub Total ')),
+                                          const Expanded(
+                                              child: Text('Sub Total ')),
                                           Text(
                                               'NGN${_cartProvider.subTotal.toStringAsFixed(0)}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold))
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       if (discount >
                                           0) // only display when discount is greater than zero
                                         Row(
                                           children: [
-                                            Expanded(child: Text('Discount ')),
+                                            const Expanded(
+                                                child: Text('Discount ')),
                                             Text(
                                                 'NGN${discount.toStringAsFixed(0)}')
                                           ],
                                         ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Row(
                                         children: [
-                                          Expanded(
+                                          const Expanded(
                                               child: Text('Delivery Fee ')),
                                           Text(
                                               'NGN${deliveryFee.toStringAsFixed(0)}')
                                         ],
                                       ),
-                                      Divider(
+                                      const Divider(
                                         color: Colors.grey,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Row(
                                         children: [
-                                          Expanded(
+                                          const Expanded(
                                               child: Text(
                                             'Total Amount',
                                             style: TextStyle(
@@ -356,12 +357,12 @@ class _CartPageState extends State<CartPage> {
                                           )),
                                           Text(
                                             'NGN${_total.toStringAsFixed(0)}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           )
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Container(
@@ -375,7 +376,7 @@ class _CartPageState extends State<CartPage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Row(children: [
-                                            Expanded(
+                                            const Expanded(
                                               child: Text(
                                                 'Total Saving',
                                                 style: TextStyle(
@@ -384,7 +385,7 @@ class _CartPageState extends State<CartPage> {
                                             ),
                                             Text(
                                               'NGN${_cartProvider.saving.toStringAsFixed(0)}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Colors.green),
                                             ),
                                           ]),
@@ -401,7 +402,7 @@ class _CartPageState extends State<CartPage> {
                 : Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: [
+                      children: const [
                         Text(
                           'Your cart is empty...',
                           style: TextStyle(
@@ -423,16 +424,16 @@ class _CartPageState extends State<CartPage> {
   _saveOrder(CartProvider cartProvider, total, CouponProvider coupon) {
     _orderServices.saveOrder({
       'products': cartProvider.cartList,
-      'userId': user.uid,
+      'userId': user!.uid,
       'deliveryFee': deliveryFee,
       'total': total,
       'discount': discount.toStringAsFixed(0),
       'cod': cartProvider.cod,
       'discountCode':
-          coupon.document == null ? null : coupon.document.data()['title'],
+          coupon.document == null ? null : coupon.document!['title'],
       'seller': {
-        'shopName': widget.document.data()['shopName'],
-        'sellerId': widget.document.data()['sellerUid'],
+        'shopName': widget.document['shopName'],
+        'sellerId': widget.document['sellerUid'],
       },
       'timestamp': DateTime.now().toString(),
       'orderStatus': 'Ordered',

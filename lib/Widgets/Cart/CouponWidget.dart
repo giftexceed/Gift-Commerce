@@ -1,9 +1,10 @@
-import 'package:ahia/Providers/CouponProvider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+
+import '../../Providers/CouponProvider.dart';
 
 class CouponWidget extends StatefulWidget {
   final String couponVendor;
@@ -120,12 +121,12 @@ class _CouponWidgetState extends State<CouponWidget> {
                               child: Column(children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text(_coupon.document.data()['title']),
+                                  child: Text(_coupon.document!['title']),
                                 ),
                                 Divider(color: Colors.grey[800]),
-                                Text(_coupon.document.data()['details']),
+                                Text(_coupon.document!['details']),
                                 Text(
-                                    '${_coupon.document.data()['discountRate']}% discount on total purchase'),
+                                    '${_coupon.document!['discountRate']}% discount on total purchase'),
                                 SizedBox(
                                   height: 6,
                                 )

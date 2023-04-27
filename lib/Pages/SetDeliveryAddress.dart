@@ -1,14 +1,10 @@
-import 'package:ahia/Auth/LoginScreen.dart';
-import 'package:ahia/Helper/Constant.dart';
-import 'package:ahia/Pages/HomeScreen.dart';
-import 'package:ahia/Pages/MainScreen.dart';
-import 'package:ahia/Providers/Auth_Provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+
+import '../Providers/Auth_Provider.dart';
 
 class SetDeliveryLocation extends StatefulWidget {
   static const String id = 'set-delivery-location';
@@ -21,12 +17,12 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
   var _addressTextController = TextEditingController();
   var _cityTextController = TextEditingController();
   var _stateTextController = TextEditingController();
-  String _address;
-  String _city;
-  String _state;
+  String? _address;
+  String? _city;
+  String? _state;
   bool _loading = false;
   bool _loggedIn = false;
-  User user;
+  User? user;
 
   @override
   void initState() {
@@ -79,27 +75,27 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 50,
                                   color: Theme.of(context).primaryColor)),
-                          SizedBox(height: 20),
-                          Icon(Icons.wallet_giftcard,
+                          const SizedBox(height: 20),
+                          const Icon(Icons.wallet_giftcard,
                               size: 350, color: Colors.red),
-                          Text('Set your delivery location',
+                          const Text('Set your delivery location',
                               style:
                                   TextStyle(fontFamily: 'Anton', fontSize: 20)),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       RichText(
-                          text: TextSpan(children: [
+                          text: const TextSpan(children: [
                         TextSpan(
                             text:
                                 'Set location where you would like your order delivered',
                             style: TextStyle(color: Colors.black87)),
                       ])),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
                           controller: _addressTextController,
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value!.isEmpty) {
                               return 'Please enter your delivery address';
                             }
 
@@ -109,10 +105,10 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                             return null;
                           },
                           decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(),
+                            enabledBorder: const OutlineInputBorder(),
                             contentPadding: EdgeInsets.zero,
                             hintText: 'Delivery Address',
-                            prefixIcon: Icon(Icons.location_city),
+                            prefixIcon: const Icon(Icons.location_city),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                   color: Theme.of(context).primaryColor,
@@ -123,7 +119,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                       TextFormField(
                           controller: _cityTextController,
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value!.isEmpty) {
                               return 'Please enter your delivery city';
                             }
 
@@ -133,10 +129,10 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                             return null;
                           },
                           decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(),
+                            enabledBorder: const OutlineInputBorder(),
                             contentPadding: EdgeInsets.zero,
                             hintText: 'Delivery City',
-                            prefixIcon: Icon(Icons.location_city),
+                            prefixIcon: const Icon(Icons.location_city),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                   color: Theme.of(context).primaryColor,
@@ -147,7 +143,7 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                       TextFormField(
                           controller: _stateTextController,
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value!.isEmpty) {
                               return 'Please enter your delivery state';
                             }
 
@@ -157,10 +153,10 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                             return null;
                           },
                           decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(),
+                            enabledBorder: const OutlineInputBorder(),
                             contentPadding: EdgeInsets.zero,
                             hintText: 'Delivery State',
-                            prefixIcon: Icon(Icons.location_city),
+                            prefixIcon: const Icon(Icons.location_city),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                   color: Theme.of(context).primaryColor,
@@ -168,42 +164,42 @@ class _SetDeliveryLocationState extends State<SetDeliveryLocation> {
                             ),
                             focusColor: Theme.of(context).primaryColor,
                           )),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                if (_formKey.currentState.validate()) {
+                                if (_formKey.currentState!.validate()) {
                                   EasyLoading.show(
                                       status: 'Updating Delivery Address...');
                                   _authData.updateDeliveryLocation(
-                                    id: user.uid,
-                                    number: user.phoneNumber,
+                                    id: user!.uid,
+                                    number: user!.phoneNumber!,
                                     address: _addressTextController.text,
                                     city: _cityTextController.text,
                                     state: _stateTextController.text,
                                   );
                                   EasyLoading.dismiss();
-                                  pushNewScreenWithRouteSettings(
-                                    context,
-                                    settings:
-                                        RouteSettings(name: MainScreen.id),
-                                    screen: MainScreen(),
-                                    withNavBar: true,
-                                    pageTransitionAnimation:
-                                        PageTransitionAnimation.cupertino,
-                                  );
+                                  // pushNewScreenWithRouteSettings(
+                                  //   context,
+                                  //   settings:
+                                  //       RouteSettings(name: MainScreen.id),
+                                  //   screen: MainScreen(),
+                                  //   withNavBar: true,
+                                  //   pageTransitionAnimation:
+                                  //       PageTransitionAnimation.cupertino,
+                                  // );
                                   // Navigator.pop(context);
                                 }
                               },
                               child: _loading
-                                  ? CircularProgressIndicator(
+                                  ? const CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           Colors.white),
                                       backgroundColor: Colors.transparent,
                                     )
-                                  : Text('Set delivery location',
+                                  : const Text('Set delivery location',
                                       style: TextStyle(color: Colors.white)),
                             ),
                           ),

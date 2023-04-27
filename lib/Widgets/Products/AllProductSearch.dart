@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_mart/Models/ProductModel.dart';
 
+import '../Cart/Counter.dart';
+
 class AllProductSearch extends StatelessWidget {
   final String offer;
   final AllProduct allProducts;
@@ -38,14 +40,14 @@ class AllProductSearch extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         child: Hero(
                             tag:
-                                'product${allProducts.document.data()['productName']}',
+                                'product${allProducts.document!['productName']}',
                             child: Image.network(
-                                allProducts.document.data()['productImage']))),
+                                allProducts.document!['productImage']))),
                   ),
                 ),
               ),
-              if (allProducts.document.data()['comparedPrice'] >
-                  allProducts.document.data()['price'])
+              if (allProducts.document!['comparedPrice'] >
+                  allProducts.document!['price'])
                 Container(
                   decoration: const BoxDecoration(
                     // color: Theme.of(context).primaryColor,
@@ -77,26 +79,26 @@ class AllProductSearch extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            allProducts.document.data()['brand'],
+                            allProducts.document!['brand'],
                             style: const TextStyle(fontSize: 10),
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            allProducts.document.data()['productName'],
+                            allProducts.document!['productName'],
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 5),
                           Row(
                             children: [
                               Text(
-                                  '\N${allProducts.document.data()['price'].toStringAsFixed(00)}',
+                                  '\N${allProducts.document!['price'].toStringAsFixed(00)}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold)),
                               const SizedBox(width: 10),
-                              if (allProducts.document.data()['comparedPrice'] >
-                                  allProducts.document.data()['price'])
+                              if (allProducts.document!['comparedPrice'] >
+                                  allProducts.document!['price'])
                                 Text(
-                                    '\N${allProducts.document.data()['comparedPrice'].toStringAsFixed(00)}',
+                                    '\N${allProducts.document!['comparedPrice'].toStringAsFixed(00)}',
                                     style: const TextStyle(
                                         decoration: TextDecoration.lineThrough,
                                         fontWeight: FontWeight.bold,
@@ -114,7 +116,7 @@ class AllProductSearch extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            CounterForCard(allProducts.document),
+                            CounterForCard(allProducts.document!),
                           ],
                         ),
                       ),

@@ -1,28 +1,28 @@
-import 'package:ahia/Auth/LoginScreen.dart';
-import 'package:ahia/Pages/CartPage.dart';
-import 'package:ahia/Pages/MainScreen.dart';
-import 'package:ahia/Pages/Map_Screen.dart';
-import 'package:ahia/Pages/ProductDetails.dart';
-import 'package:ahia/Pages/ProductList.dart';
-import 'package:ahia/Pages/ProfileScreen.dart';
-import 'package:ahia/Pages/ProfileUpdate.dart';
-import 'package:ahia/Providers/CartProvider.dart';
-import 'package:ahia/Providers/CouponProvider.dart';
-import 'package:ahia/Providers/OrderProvider.dart';
-import 'package:ahia/Providers/ProductProvider.dart';
-import 'package:ahia/Services/OnlinePayment.dart';
-import 'package:ahia/Pages/SetDeliveryAddress.dart';
-import 'package:ahia/Pages/VendorHomeScreen.dart';
-import 'package:ahia/Providers/Location_Provider.dart';
-import 'package:ahia/Providers/StoreProvider.dart';
-import 'package:ahia/Auth/WelcomeScreen.dart';
-import 'package:ahia/Pages/HomeScreen.dart';
-import 'package:ahia/Pages/SplashScreen.dart';
-import 'package:ahia/Providers/Auth_Provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:gift_mart/Auth/WelcomeScreen.dart';
+import 'package:gift_mart/Pages/CartPage.dart';
+import 'package:gift_mart/Pages/HomeScreen.dart';
 import 'package:provider/provider.dart';
+import 'Auth/LoginScreen.dart';
+import 'Pages/MainScreen.dart';
+import 'Pages/Map_Screen.dart';
+import 'Pages/ProductDetails.dart';
+import 'Pages/ProductList.dart';
+import 'Pages/ProfileScreen.dart';
+import 'Pages/ProfileUpdate.dart';
+import 'Pages/SetDeliveryAddress.dart';
+import 'Pages/SplashScreen.dart';
+import 'Pages/VendorHomeScreen.dart';
+import 'Providers/Auth_Provider.dart';
+import 'Providers/CartProvider.dart';
+import 'Providers/CouponProvider.dart';
+import 'Providers/Location_Provider.dart';
+import 'Providers/OrderProvider.dart';
+import 'Providers/ProductProvider.dart';
+import 'Providers/StoreProvider.dart';
+import 'Services/OnlinePayment.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +58,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // theme: ThemeData(primaryColor: Colors.green, fontFamily: 'Lato'),
 
-      theme: ThemeData(primaryColor: Color(0xFF84c225), fontFamily: 'Lato'),
+      theme:
+          ThemeData(primaryColor: const Color(0xFF84c225), fontFamily: 'Lato'),
       debugShowCheckedModeBanner: false,
       // home: SplashScreen(),
       initialRoute: SplashScreen.id,
@@ -72,8 +73,6 @@ class MyApp extends StatelessWidget {
         MainScreen.id: (context) => MainScreen(),
         VendorHomeScreen.id: (context) => VendorHomeScreen(),
         ProductList.id: (context) => ProductList(),
-        ProductDetails.id: (context) => ProductDetails(),
-        CartPage.id: (context) => CartPage(),
         ProfileScreen.id: (context) => ProfileScreen(),
         UpdateProfile.id: (context) => UpdateProfile(),
         OnlinePayment.id: (context) => OnlinePayment(),

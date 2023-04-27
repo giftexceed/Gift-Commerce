@@ -1,8 +1,11 @@
-import 'package:ahia/Helper/Constant.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
+import '../Helper/Constant.dart';
+
 class OnBoardScreen extends StatefulWidget {
+  const OnBoardScreen({super.key});
+
   @override
   _OnBoardScreenState createState() => _OnBoardScreenState();
 }
@@ -15,7 +18,7 @@ int _currentPage = 0;
 
 List<Widget> _pages = [
   Column(
-    children: [
+    children: const [
       Expanded(
           child:
               Icon(Icons.location_city, size: 450, color: Color(0xFF84c225))),
@@ -27,7 +30,7 @@ List<Widget> _pages = [
     ],
   ),
   Column(
-    children: [
+    children: const [
       Expanded(child: Icon(Icons.store, size: 450, color: Colors.grey)),
       Text(
         'Order from your favourite store',
@@ -37,7 +40,7 @@ List<Widget> _pages = [
     ],
   ),
   Column(
-    children: [
+    children: const [
       Expanded(
           child: Icon(Icons.wallet_giftcard, size: 450, color: Colors.red)),
       Text(
@@ -65,7 +68,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
             },
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         DotsIndicator(
@@ -80,7 +83,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                 borderRadius: BorderRadius.circular(5.0)),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
       ],

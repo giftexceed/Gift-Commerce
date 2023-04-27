@@ -1,49 +1,47 @@
-import 'package:ahia/Pages/HomeScreen.dart';
-import 'package:ahia/Services/UserServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../Pages/HomeScreen.dart';
+import '../Services/UserServices.dart';
 
 class AuthProvider with ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  String smsOtp;
-  String verificationId;
-  String error = '';
+  String? smsOtp;
+  String? verificationId;
+  String? error = '';
   UserServices _userServices = UserServices();
   bool loading = false;
   // LocationProvider locationData = LocationProvider();
-  String screen;
-  // double latitude;
-  // double longitude;
-  String address;
-  String city;
-  String state;
-  DocumentSnapshot snapshot;
+  String? screen;
+  String? address;
+  String? city;
+  String? state;
+  DocumentSnapshot? snapshot;
 
-  Future<void> verifyPhoneNumber({BuildContext context, String number}) async {
-    this.loading = true;
+  Future<void> verifyPhoneNumber(
+      {BuildContext? context, String? number}) async {
+    loading = true;
     notifyListeners();
-    final PhoneVerificationCompleted verificationCompleted =
-        (PhoneAuthCredential credential) async {
-      this.loading = false;
+    verificationCompleted(PhoneAuthCredential credential) async {
+      loading = false;
       notifyListeners();
       await _auth.signInWithCredential(credential);
-    };
+    }
 
-    final PhoneVerificationFailed verificationFailed =
-        (FirebaseAuthException e) {
-      this.loading = false;
+    verificationFailed(FirebaseAuthException e) {
+      loading = false;
       print(e.code);
-      this.error = e.toString();
+      error = e.toString();
       notifyListeners();
-    };
+    }
 
-    final PhoneCodeSent smsOtpSend = (String verId, int resendToken) async {
-      this.verificationId = verId;
+    smsOtpSend(String? verId, int? resendToken) async {
+      verificationId = verId;
 
       //Enter otp dialog
-      smsOtpDialog(context, number);
-    };
+      smsOtpDialog(context!, number!);
+    }
+
     try {
       _auth.verifyPhoneNumber(
           phoneNumber: number,
@@ -51,22 +49,22 @@ class AuthProvider with ChangeNotifier {
           verificationFailed: verificationFailed,
           codeSent: smsOtpSend,
           codeAutoRetrievalTimeout: (String veriId) {
-            this.verificationId = veriId;
+            verificationId = veriId;
           });
     } catch (e) {
-      this.error = e.toString();
-      this.loading = false;
+      error = e.toString();
+      loading = false;
       notifyListeners();
     }
   }
 
-  Future<bool> smsOtpDialog(BuildContext context, String number) {
+  Future smsOtpDialog(BuildContext context, String number) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Column(
-              children: [
+              children: const [
                 Text('Verification Code'),
                 SizedBox(
                   height: 6,
@@ -84,7 +82,7 @@ class AuthProvider with ChangeNotifier {
                 keyboardType: TextInputType.number,
                 maxLength: 6,
                 onChanged: (value) {
-                  this.smsOtp = value;
+                  smsOtp = value;
                 },
               ),
             ),
@@ -94,18 +92,18 @@ class AuthProvider with ChangeNotifier {
                   try {
                     PhoneAuthCredential phoneAuthCredential =
                         PhoneAuthProvider.credential(
-                            verificationId: verificationId, smsCode: smsOtp);
+                            verificationId: verificationId!, smsCode: smsOtp!);
 
-                    final User user =
+                    final User? user =
                         (await _auth.signInWithCredential(phoneAuthCredential))
                             .user;
 
                     if (user != null) {
-                      this.loading = false;
+                      loading = false;
                       notifyListeners();
                       _userServices.getUserById(user.uid).then((snapshot) {
                         if (snapshot.exists) {
-                          if (this.screen == 'Login') {
+                          if (screen == 'Login') {
                             //if user data exists in db, will update
                             Navigator.pushReplacementNamed(
                                 context, HomeScreen.id);
@@ -132,7 +130,7 @@ class AuthProvider with ChangeNotifier {
                     //   print(this.screen);
                     // }
                   } catch (e) {
-                    this.error = 'Invalid OTP';
+                    error = 'Invalid OTP';
                     notifyListeners();
                     print(e.toString());
                     Navigator.of(context).pop();
@@ -146,33 +144,33 @@ class AuthProvider with ChangeNotifier {
             ],
           );
         }).whenComplete(() {
-      this.loading = false;
+      loading = false;
       notifyListeners();
     });
   }
 
-  void _createUser({String id, String number}) {
+  void _createUser({String? id, String? number}) {
     _userServices.createUserData({
       'id': id,
       'number': number,
-      'address': this.address,
+      'address': address,
       // 'latitude': this.latitude,
       // 'longitude': this.longitude,
     });
-    this.loading = false;
+    loading = false;
     notifyListeners();
   }
 
-  Future<bool> updateUser({String id, String number}) async {
+  Future<bool> updateUser({String? id, String? number}) async {
     try {
       _userServices.updateUserData({
         'id': id,
         'number': number,
-        'address': this.address,
+        'address': address,
         // 'latitude': this.latitude,
         // 'longitude': this.longitude,
       });
-      this.loading = false;
+      loading = false;
       notifyListeners();
       return true;
     } catch (e) {
@@ -181,11 +179,11 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> updateDeliveryLocation(
-      {String id,
-      String number,
-      String address,
-      String city,
-      String state}) async {
+      {String? id,
+      String? number,
+      String? address,
+      String? city,
+      String? state}) async {
     try {
       _userServices.updateUserData({
         'id': id,
@@ -194,7 +192,7 @@ class AuthProvider with ChangeNotifier {
         'city': city,
         'state': state,
       });
-      this.loading = false;
+      loading = false;
       notifyListeners();
       return true;
     } catch (e) {
@@ -205,13 +203,13 @@ class AuthProvider with ChangeNotifier {
   getUserDetails() async {
     DocumentSnapshot result = await FirebaseFirestore.instance
         .collection('Ahia Users')
-        .doc(_auth.currentUser.uid)
+        .doc(_auth.currentUser!.uid)
         .get();
     if (result != null) {
-      this.snapshot = result;
+      snapshot = result;
       notifyListeners();
     } else {
-      this.snapshot = null;
+      snapshot;
       notifyListeners();
     }
     return result;

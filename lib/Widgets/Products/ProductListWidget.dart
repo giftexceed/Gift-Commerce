@@ -1,11 +1,11 @@
-import 'package:ahia/Providers/StoreProvider.dart';
-import 'package:ahia/Services/ProductServices.dart';
-import 'package:ahia/Widgets/Products/ProductCardWidget.dart';
-import 'package:ahia/Widgets/Products/ProductFilterWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gift_mart/Widgets/Products/ProductCardWidget.dart';
 import 'package:provider/provider.dart';
+
+import '../../Providers/StoreProvider.dart';
+import '../../Services/ProductServices.dart';
 
 class ProductListWidget extends StatelessWidget {
   @override
@@ -20,23 +20,23 @@ class ProductListWidget extends StatelessWidget {
           .where('category.subCategory',
               isEqualTo: _storeProvider.selectedSubCategory)
           .where('seller.sellerUid',
-              isEqualTo: _storeProvider.storeDetails['uid'])
+              isEqualTo: _storeProvider.storeDetails!['uid'])
           .get(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('Something went wrong'));
+          return const Center(child: Text('Something went wrong'));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (!snapshot.hasData) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        if (snapshot.data.docs.isEmpty) {
+        if (snapshot.data!.docs.isEmpty) {
           return Container();
         }
 
@@ -55,12 +55,12 @@ class ProductListWidget extends StatelessWidget {
                     child: FittedBox(
                         child: Row(
                       children: [
-                        snapshot.data.docs.length <= 1
-                            ? Text('${snapshot.data.docs.length} Item',
-                                style: TextStyle(
+                        snapshot.data!.docs.length <= 1
+                            ? Text('${snapshot.data!.docs.length} Item',
+                                style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold))
-                            : Text('${snapshot.data.docs.length} Items',
-                                style: TextStyle(
+                            : Text('${snapshot.data!.docs.length} Items',
+                                style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
                     )),
@@ -68,11 +68,11 @@ class ProductListWidget extends StatelessWidget {
                 ),
               ),
             ),
-            new ListView(
+            ListView(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: snapshot.data.docs.map((DocumentSnapshot document) {
-                return new ProductCard(document);
+              physics: const NeverScrollableScrollPhysics(),
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                return ProductCard(document);
               }).toList(),
             ),
           ],

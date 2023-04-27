@@ -1,10 +1,10 @@
-import 'package:ahia/Widgets/CategoriesWidget.dart';
-import 'package:ahia/Widgets/Products/BestSellingProduct.dart';
-import 'package:ahia/Widgets/Products/FeaturedProducts.dart';
-import 'package:ahia/Widgets/Products/RecentlyAddedProducts.dart';
-import 'package:ahia/Widgets/VendorAppBar.dart';
-import 'package:ahia/Widgets/VendorBanner.dart';
 import 'package:flutter/material.dart';
+import 'package:gift_mart/Widgets/Products/RecentlyAddedProducts.dart';
+import 'package:gift_mart/Widgets/VendorAppBar.dart';
+import '../Widgets/CategoriesWidget.dart';
+import '../Widgets/Products/BestSellingProduct.dart';
+import '../Widgets/Products/FeaturedProducts.dart';
+import '../Widgets/VendorBanner.dart';
 
 class VendorHomeScreen extends StatelessWidget {
   static const String id = 'vendor-home-screen';

@@ -1,12 +1,15 @@
-import 'package:ahia/Providers/StoreProvider.dart';
-import 'package:ahia/Services/ProductServices.dart';
-import 'package:ahia/Widgets/Products/ProductCardWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../Providers/StoreProvider.dart';
+import '../../Services/ProductServices.dart';
+import 'ProductCardWidget.dart';
+
 class BestSellingProducts extends StatelessWidget {
+  const BestSellingProducts({super.key});
+
   @override
   Widget build(BuildContext context) {
     ProductServices _services = ProductServices();
@@ -16,7 +19,7 @@ class BestSellingProducts extends StatelessWidget {
       future: _services.product
           .where('published', isEqualTo: true)
           .where('collection', isEqualTo: 'Best Selling')
-          .where('seller.sellerUid', isEqualTo: _store.storeDetails['uid'])
+          .where('seller.sellerUid', isEqualTo: _store.storeDetails!['uid'])
           .limit(10)
           .get(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -30,7 +33,7 @@ class BestSellingProducts extends StatelessWidget {
         if (!snapshot.hasData) {
           return Container();
         }
-        if (snapshot.data.docs.isEmpty) {
+        if (snapshot.data!.docs.isEmpty) {
           return Container();
         }
 
@@ -64,11 +67,11 @@ class BestSellingProducts extends StatelessWidget {
                 ),
               ),
             ),
-            new ListView(
+            ListView(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              children: snapshot.data.docs.map((DocumentSnapshot document) {
-                return new ProductCard(document);
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                return ProductCard(document);
               }).toList(),
             ),
           ],

@@ -1,5 +1,5 @@
-import 'package:ahia/Providers/CartProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:gift_mart/Providers/CartProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_bar/toggle_bar.dart';
 
@@ -14,7 +14,7 @@ class CodToggleSwitch extends StatelessWidget {
           selectedTabColor: Theme.of(context).primaryColor,
           selectedTextColor: Colors.white,
           textColor: Colors.black,
-          labels: [
+          labels: const [
             "Pay Online",
             "Cash on Delivery",
           ],

@@ -1,10 +1,9 @@
-import 'package:ahia/Pages/ProductList.dart';
-import 'package:ahia/Providers/StoreProvider.dart';
-import 'package:ahia/Services/ProductServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:gift_mart/Providers/StoreProvider.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
+import '../Services/ProductServices.dart';
 
 class VendorCategories extends StatefulWidget {
   @override
@@ -12,16 +11,16 @@ class VendorCategories extends StatefulWidget {
 }
 
 class _VendorCategoriesState extends State<VendorCategories> {
-  ProductServices _services = ProductServices();
-  List _catList = [];
+  final ProductServices _services = ProductServices();
+  final List _catList = [];
 
   @override
   void didChangeDependencies() {
-    var _store = Provider.of<StoreProvider>(context);
+    var store = Provider.of<StoreProvider>(context);
 
     FirebaseFirestore.instance
         .collection('products')
-        .where('seller.sellerUid', isEqualTo: _store.storeDetails['uid'])
+        .where('seller.sellerUid', isEqualTo: store.storeDetails!['uid'])
         .get()
         .then((QuerySnapshot querySnapshot) => {
               querySnapshot.docs.forEach((doc) {
@@ -36,16 +35,16 @@ class _VendorCategoriesState extends State<VendorCategories> {
 
   @override
   Widget build(BuildContext context) {
-    var _storeProvider = Provider.of<StoreProvider>(context);
+    var storeProvider = Provider.of<StoreProvider>(context);
 
     return FutureBuilder(
       future: _services.category.get(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('Something went wrong...'));
+          return const Center(child: Text('Something went wrong...'));
         }
         if (_catList.length == 0) {
-          return Center(
+          return const Center(
             child: Text(''),
           );
         }
@@ -60,10 +59,10 @@ class _VendorCategoriesState extends State<VendorCategories> {
                 child: Material(
                   elevation: 5,
                   borderRadius: BorderRadius.circular(6),
-                  child: Container(
+                  child: SizedBox(
                     height: 60,
                     width: MediaQuery.of(context).size.width,
-                    child: Center(
+                    child: const Center(
                       child: FittedBox(
                         child: Text('Shop by Category',
                             style: TextStyle(
@@ -85,23 +84,15 @@ class _VendorCategoriesState extends State<VendorCategories> {
               ),
               Wrap(
                 direction: Axis.horizontal,
-                children: snapshot.data.docs.map((DocumentSnapshot document) {
-                  return _catList.contains(document.data()['categoryName'])
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  return _catList.contains(document['categoryName'])
                       ? InkWell(
                           onTap: () {
-                            _storeProvider.selectedCategory(
-                                document.data()['categoryName']);
-                            _storeProvider.selectedCategorySub(null);
-                            pushNewScreenWithRouteSettings(
-                              context,
-                              settings: RouteSettings(name: ProductList.id),
-                              screen: ProductList(),
-                              withNavBar: true,
-                              pageTransitionAnimation:
-                                  PageTransitionAnimation.cupertino,
-                            );
+                            storeProvider
+                                .selectedCategory(document['categoryName']);
+                            storeProvider.selectedCategorySub(null);
                           },
-                          child: Container(
+                          child: SizedBox(
                             width: 120,
                             height: 150,
                             child: Container(
@@ -115,12 +106,12 @@ class _VendorCategoriesState extends State<VendorCategories> {
                                 children: [
                                   Center(
                                       child: Image.network(
-                                          document.data()['productImage'])),
+                                          document['productImage'])),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 8, right: 8),
                                     child: Text(
-                                      document.data()['categoryName'],
+                                      document['categoryName'],
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -129,7 +120,7 @@ class _VendorCategoriesState extends State<VendorCategories> {
                             ),
                           ),
                         )
-                      : Text('');
+                      : const Text('');
                 }).toList(),
               ),
             ],

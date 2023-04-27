@@ -11,40 +11,40 @@ class OrderServices {
   }
 
   Color statusColour(DocumentSnapshot document, context) {
-    if (document.data()['orderStatus'] == 'Accepted') {
+    if (document['orderStatus'] == 'Accepted') {
       return Theme.of(context).primaryColor;
     }
-    if (document.data()['orderStatus'] == 'Rejected') {
+    if (document['orderStatus'] == 'Rejected') {
       return Colors.red;
     }
-    if (document.data()['orderStatus'] == 'Picked Up') {
+    if (document['orderStatus'] == 'Picked Up') {
       return Colors.pink;
     }
-    if (document.data()['orderStatus'] == 'Delivered') {
+    if (document['orderStatus'] == 'Delivered') {
       return Colors.purple;
     }
-    if (document.data()['orderStatus'] == 'On the way') {
+    if (document['orderStatus'] == 'On the way') {
       return Colors.green;
     }
     return Colors.orange;
   }
 
   Icon statusIcon(DocumentSnapshot document, context) {
-    if (document.data()['orderStatus'] == 'Accepted') {
+    if (document['orderStatus'] == 'Accepted') {
       return Icon(Icons.check_circle, color: statusColour(document, context));
     }
 
-    if (document.data()['orderStatus'] == 'Rejected') {
+    if (document['orderStatus'] == 'Rejected') {
       return Icon(Icons.cancel, color: statusColour(document, context));
     }
-    if (document.data()['orderStatus'] == 'Picked Up') {
+    if (document['orderStatus'] == 'Picked Up') {
       return Icon(Icons.wallet_giftcard,
           color: statusColour(document, context));
     }
-    if (document.data()['orderStatus'] == 'Delivered') {
+    if (document['orderStatus'] == 'Delivered') {
       return Icon(Icons.shopping_bag, color: statusColour(document, context));
     }
-    if (document.data()['orderStatus'] == 'On the way') {
+    if (document['orderStatus'] == 'On the way') {
       return Icon(Icons.delivery_dining,
           color: statusColour(document, context));
     }
@@ -53,16 +53,16 @@ class OrderServices {
   }
 
   String statusComment(document) {
-    if (document.data()['orderStatus'] == 'Picked Up') {
-      return 'Your order has been Picked by ${document.data()['deliveryBoy']['name']}';
+    if (document['orderStatus'] == 'Picked Up') {
+      return 'Your order has been Picked by ${document['deliveryBoy']['name']}';
     }
-    if (document.data()['orderStatus'] == 'On the way') {
-      return 'Your order is on the way, being shipped by ${document.data()['deliveryBoy']['name']}';
+    if (document['orderStatus'] == 'On the way') {
+      return 'Your order is on the way, being shipped by ${document['deliveryBoy']['name']}';
     }
-    if (document.data()['orderStatus'] == 'Delivered') {
-      return 'Your order is marked (completed). Delivered by ${document.data()['deliveryBoy']['name']}';
+    if (document['orderStatus'] == 'Delivered') {
+      return 'Your order is marked (completed). Delivered by ${document['deliveryBoy']['name']}';
     }
 
-    return 'Your order has been accepted by ${document.data()['seller']['shopName']}. Delivery agent, ${document.data()['deliveryBoy']['name']}, is on the way to pick it up';
+    return 'Your order has been accepted by ${document['seller']['shopName']}. Delivery agent, ${document['deliveryBoy']['name']}, is on the way to pick it up';
   }
 }

@@ -1,8 +1,9 @@
-import 'package:ahia/Widgets/Products/AddToCartWidget.dart';
-import 'package:ahia/Widgets/Products/SaveForLater.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gift_mart/Widgets/Products/SaveForLater.dart';
+
+import 'AddToCartWidget.dart';
 
 class BottomSheetContainer extends StatefulWidget {
   final DocumentSnapshot document;

@@ -1,5 +1,3 @@
-import 'package:ahia/Providers/OrderProvider.dart';
-import 'package:ahia/Services/OrderServices.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../Providers/OrderProvider.dart';
+import '../Services/OrderServices.dart';
+
 class MyOrders extends StatefulWidget {
   @override
   _MyOrdersState createState() => _MyOrdersState();
@@ -15,7 +16,7 @@ class MyOrders extends StatefulWidget {
 
 class _MyOrdersState extends State<MyOrders> {
   OrderServices _orderServices = OrderServices();
-  User user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
 
   int tag = 0;
   List<String> options = [
@@ -30,15 +31,15 @@ class _MyOrdersState extends State<MyOrders> {
 
   @override
   Widget build(BuildContext context) {
-    var _orderProvider = Provider.of<OrderProvider>(context);
+    var orderProvider = Provider.of<OrderProvider>(context);
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-          title: Text('My Orders', style: TextStyle(color: Colors.white)),
+          title: const Text('My Orders', style: TextStyle(color: Colors.white)),
           centerTitle: true,
           actions: [
             IconButton(
-              icon: Icon(CupertinoIcons.search, color: Colors.white),
+              icon: const Icon(CupertinoIcons.search, color: Colors.white),
               onPressed: () {},
             )
           ]),
@@ -52,12 +53,12 @@ class _MyOrdersState extends State<MyOrders> {
               onChanged: (val) {
                 if (val == 0) {
                   setState(() {
-                    _orderProvider.status = null;
+                    orderProvider.status = null;
                   });
                 }
                 setState(() {
                   tag = val;
-                  _orderProvider.status = options[val];
+                  orderProvider.status = options[val];
                 });
               },
               choiceItems: C2Choice.listFrom<int, String>(
@@ -70,21 +71,21 @@ class _MyOrdersState extends State<MyOrders> {
           Container(
             child: StreamBuilder<QuerySnapshot>(
               stream: _orderServices.orders
-                  .where('userId', isEqualTo: user.uid)
+                  .where('userId', isEqualTo: user!.uid)
                   .where('orderStatus',
-                      isEqualTo: tag > 0 ? _orderProvider.status : null)
+                      isEqualTo: tag > 0 ? orderProvider.status : null)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
-                if (snapshot.data.size == 0) {
+                if (snapshot.data!.size == 0) {
                   return Center(
                     child: Text(tag > 0
                         ? '${options[tag]} category is empty'
@@ -93,10 +94,10 @@ class _MyOrdersState extends State<MyOrders> {
                 }
 
                 return Expanded(
-                  child: new ListView(
+                  child: ListView(
                     children:
-                        snapshot.data.docs.map((DocumentSnapshot document) {
-                      return new Container(
+                        snapshot.data!.docs.map((DocumentSnapshot document) {
+                      return Container(
                           color: Colors.white,
                           child: Column(children: [
                             ListTile(
@@ -106,7 +107,7 @@ class _MyOrdersState extends State<MyOrders> {
                                 child: _orderServices.statusIcon(
                                     document, context),
                               ),
-                              title: Text(document.data()['orderStatus'],
+                              title: Text(document['orderStatus'],
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: _orderServices.statusColour(
@@ -115,30 +116,28 @@ class _MyOrdersState extends State<MyOrders> {
                                   )),
                               subtitle: Text(
                                   'On ${DateFormat.yMMMd().format(
-                                    DateTime.parse(
-                                        document.data()['timestamp']),
+                                    DateTime.parse(document['timestamp']),
                                   )}',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: const TextStyle(fontSize: 12)),
                               trailing: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                      'Amount: \NGN${document.data()['total'].toStringAsFixed(0)}',
-                                      style: TextStyle(
+                                      'Amount: \NGN${document['total'].toStringAsFixed(0)}',
+                                      style: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold)),
                                   Text(
-                                      'Payment Method: ${document.data()['cod'] == true ? 'Cash on delivery' : 'Online payment'}',
-                                      style: TextStyle(
+                                      'Payment Method: ${document['cod'] == true ? 'Cash on delivery' : 'Online payment'}',
+                                      style: const TextStyle(
                                         fontSize: 12,
                                       )),
                                 ],
                               ),
                             ),
                             // Delivery boy contact area goes here
-                            if (document.data()['deliveryBoy']['name'].length >
-                                2)
+                            if (document['deliveryBoy']['name'].length > 2)
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 8, right: 8),
@@ -148,28 +147,25 @@ class _MyOrdersState extends State<MyOrders> {
                                       .withOpacity(.5),
                                   leading: CircleAvatar(
                                     backgroundColor: Colors.white,
-                                    child: document.data()['deliveryBoy']
-                                                ['image'] ==
+                                    child: document['deliveryBoy']['image'] ==
                                             null
                                         ? Container()
                                         : Image.network(
-                                            document.data()['deliveryBoy']
-                                                ['image'],
+                                            document['deliveryBoy']['image'],
                                             height: 24),
                                   ),
-                                  title: Text(
-                                      document.data()['deliveryBoy']['name']),
+                                  title: Text(document['deliveryBoy']['name']),
                                   subtitle: Text(
                                       _orderServices.statusComment(document)),
                                 ),
                               ),
                             ExpansionTile(
-                              title: Text(
+                              title: const Text(
                                 'Order details',
                                 style: TextStyle(
                                     fontSize: 12, color: Colors.black),
                               ),
-                              subtitle: Text(
+                              subtitle: const Text(
                                 'view order details',
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey),
@@ -177,25 +173,25 @@ class _MyOrdersState extends State<MyOrders> {
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     return ListTile(
                                       leading: CircleAvatar(
                                           backgroundColor: Colors.white,
                                           child: Image.network(
-                                              document.data()['products'][index]
+                                              document['products'][index]
                                                   ['productImage'])),
-                                      title: Text(document.data()['products']
-                                          [index]['productName']),
+                                      title: Text(document['products'][index]
+                                          ['productName']),
                                       subtitle: Text(
-                                          'NGN${document.data()['products'][index]['price'].toStringAsFixed(0)} x qty (${document.data()['products'][index]['quantity']}) = ${document.data()['products'][index]['total'].toStringAsFixed(0)},',
-                                          style: TextStyle(
+                                          'NGN${document['products'][index]['price'].toStringAsFixed(0)} x qty (${document['products'][index]['quantity']}) = ${document['products'][index]['total'].toStringAsFixed(0)},',
+                                          style: const TextStyle(
                                               color: Colors.grey,
                                               fontSize: 12)),
                                     );
                                   },
-                                  itemCount: document.data()['products'].length,
+                                  itemCount: document['products'].length,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -209,53 +205,52 @@ class _MyOrdersState extends State<MyOrders> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(children: [
                                         Row(children: [
-                                          Text('Seller: ',
+                                          const Text('Seller: ',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 12)),
                                           Text(
-                                            document.data()['seller']
-                                                ['shopName'],
-                                            style: (TextStyle(fontSize: 12)),
+                                            document['seller']['shopName'],
+                                            style:
+                                                (const TextStyle(fontSize: 12)),
                                           )
                                         ]),
-                                        SizedBox(height: 10),
-                                        if (int.parse(
-                                                document.data()['discount']) >
-                                            0)
+                                        const SizedBox(height: 10),
+                                        if (int.parse(document['discount']) > 0)
                                           Column(children: [
                                             Row(children: [
-                                              Text('Discount: ',
+                                              const Text('Discount: ',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 12)),
                                               Text(
-                                                '\NGN${document.data()['discount']}',
+                                                '\NGN${document['discount']}',
                                               )
                                             ]),
-                                            SizedBox(height: 10),
+                                            const SizedBox(height: 10),
                                             Row(children: [
-                                              Text('Discount Code: ',
+                                              const Text('Discount Code: ',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 12)),
                                               Text(
-                                                  '${document.data()['discountCode']}',
-                                                  style:
-                                                      TextStyle(fontSize: 12))
+                                                  '${document['discountCode']}',
+                                                  style: const TextStyle(
+                                                      fontSize: 12))
                                             ])
                                           ]),
-                                        SizedBox(height: 10),
+                                        const SizedBox(height: 10),
                                         Row(children: [
-                                          Text('Delivery Fee: ',
+                                          const Text('Delivery Fee: ',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 12)),
                                           Text(
-                                              'NGN${document.data()['deliveryFee'].toString()}',
-                                              style: TextStyle(fontSize: 12))
+                                              'NGN${document['deliveryFee'].toString()}',
+                                              style:
+                                                  const TextStyle(fontSize: 12))
                                         ])
                                       ]),
                                     ),
@@ -263,7 +258,7 @@ class _MyOrdersState extends State<MyOrders> {
                                 )
                               ],
                             ),
-                            Divider(height: 3, color: Colors.grey)
+                            const Divider(height: 3, color: Colors.grey)
                           ]));
                     }).toList(),
                   ),

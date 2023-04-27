@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:ahia/Pages/MainScreen.dart';
-import 'package:ahia/Auth/WelcomeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../Auth/WelcomeScreen.dart';
+import 'MainScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splash-screen';
@@ -15,18 +15,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     Timer(Duration(seconds: 3), () {
       FirebaseAuth.instance.authStateChanges().listen((User user) {
-        if (user == null) {
-          Navigator.pushReplacementNamed(context, WelcomeScreen.id);
-          // Navigator.pushReplacement(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => WelcomeScreen(),
-          //     ));
-        } else {
-          // Navigator.pushReplacementNamed(context, HomeScreen.id);
-          Navigator.pushReplacementNamed(context, MainScreen.id);
-        }
-      });
+            if (user == null) {
+              Navigator.pushReplacementNamed(context, WelcomeScreen.id);
+            } else {
+              // Navigator.pushReplacementNamed(context, HomeScreen.id);
+              Navigator.pushReplacementNamed(context, MainScreen.id);
+            }
+          } as void Function(User? event)?);
     });
     super.initState();
   }

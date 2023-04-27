@@ -1,8 +1,9 @@
-import 'package:ahia/Widgets/AppBar.dart';
-import 'package:ahia/Widgets/ImageSlider.dart';
-import 'package:ahia/Widgets/NearByStores.dart';
-import 'package:ahia/Widgets/TopPickedStores.dart';
 import 'package:flutter/material.dart';
+
+import '../Widgets/AppBar.dart';
+import '../Widgets/ImageSlider.dart';
+import '../Widgets/NearByStores.dart';
+import '../Widgets/TopPickedStores.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home-screen';

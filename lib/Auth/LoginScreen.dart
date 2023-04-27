@@ -1,6 +1,7 @@
-import 'package:ahia/Providers/Auth_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../Providers/Auth_Provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login-screen';
@@ -31,25 +32,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                       children: [
                         Text('${auth.error} - Please try again',
-                            style: TextStyle(color: Colors.red)),
+                            style: const TextStyle(color: Colors.red)),
                       ],
                     )),
                   ),
-                  SizedBox(height: 5),
-                  Text(
+                  const SizedBox(height: 5),
+                  const Text(
                     'LOGIN',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87),
                   ),
-                  Text('Enter your phone number to proceed',
+                  const Text('Enter your phone number to proceed',
                       style: TextStyle(fontSize: 14)),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       prefixText: '+234',
                       labelText: 'Enter your phone number (Eg. +2348030000000)',
                     ),
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
@@ -102,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
                             },
                             child: auth.loading
-                                ? CircularProgressIndicator(
+                                ? const CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                         Colors.white),
                                   )
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     _isValidPhoneNumber
                                         ? 'Continue'
                                         : 'Enter Phone Number',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.white, fontSize: 14),
                                   ),
                           ),

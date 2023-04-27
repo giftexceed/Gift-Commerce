@@ -1,11 +1,12 @@
-import 'package:ahia/Pages/FavouriteScreen.dart';
-import 'package:ahia/Pages/HomeScreen.dart';
-import 'package:ahia/Pages/OrdersScreen.dart';
-import 'package:ahia/Pages/ProfileScreen.dart';
-import 'package:ahia/Widgets/Cart/CartNotification.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+
+import '../Widgets/Cart/CartNotification.dart';
+import 'FavouriteScreen.dart';
+import 'HomeScreen.dart';
+import 'OrdersScreen.dart';
+import 'ProfileScreen.dart';
 
 class MainScreen extends StatelessWidget {
   static const String id = 'main-screen';
@@ -24,26 +25,18 @@ class MainScreen extends StatelessWidget {
         PersistentBottomNavBarItem(
           icon: Icon(CupertinoIcons.home),
           title: ("Home"),
-          activeColor: Theme.of(context).primaryColor,
-          inactiveColor: CupertinoColors.systemGrey,
         ),
         PersistentBottomNavBarItem(
           icon: Icon(CupertinoIcons.square_favorites_alt),
           title: ("Favourites"),
-          activeColor: Theme.of(context).primaryColor,
-          inactiveColor: CupertinoColors.systemGrey,
         ),
         PersistentBottomNavBarItem(
           icon: Icon(CupertinoIcons.bag),
           title: ("My Orders"),
-          activeColor: Theme.of(context).primaryColor,
-          inactiveColor: CupertinoColors.systemGrey,
         ),
         PersistentBottomNavBarItem(
           icon: Icon(CupertinoIcons.profile_circled),
           title: ("Profile"),
-          activeColor: Theme.of(context).primaryColor,
-          inactiveColor: CupertinoColors.systemGrey,
         ),
       ];
     }
